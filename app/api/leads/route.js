@@ -11,8 +11,7 @@ export async function GET(request) {
   try {
     const { data, error } = await supabase
       .from('ease_leads')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*');
 
     if (error) throw error;
 
