@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, TerminalSquare, Settings, LogOut, Loader2 } from "lucide-react";
+import { LayoutDashboard, TerminalSquare, Settings, LogOut, Loader2, Share2 } from "lucide-react";
 
 export default function AdminLayout({ children }) {
   const [token, setToken] = useState("");
@@ -65,6 +65,7 @@ export default function AdminLayout({ children }) {
   const navItems = [
     { name: "Dashboard", path: "/", icon: LayoutDashboard },
     { name: "Prompt Generator", path: "/prompts", icon: TerminalSquare },
+    { name: "Social Publisher", path: "/socials", icon: Share2 },
     { name: "Integrations", path: "/settings", icon: Settings },
   ];
 
