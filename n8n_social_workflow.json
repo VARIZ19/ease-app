@@ -1,0 +1,140 @@
+{
+  "name": "Ease Social Publisher Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "ease-publish",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "e441460c-2d12-4c6e-826c-d2ff345b5971",
+      "name": "Webhook (From Next.js App)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "ease-social-webhook"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "5b404d0f-4889-4e5c-9c71-c9170e61d6ad",
+      "name": "Google Drive (Get Media)",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        420,
+        300
+      ],
+      "notesInFlow": true,
+      "notes": "Select the specific file or search for files in a folder"
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": ""
+        },
+        "message": "={{ $json.body.text }}",
+        "options": {}
+      },
+      "id": "010bba13-b5f7-41ab-bdc3-cf1cc84c988a",
+      "name": "Facebook Pages",
+      "type": "n8n-nodes-base.facebookPages",
+      "typeVersion": 1,
+      "position": [
+        640,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.body.text }}",
+        "attachments": "data"
+      },
+      "id": "76495be2-4b26-444a-bee6-d39b85c189b2",
+      "name": "Twitter / X",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": ""
+        },
+        "caption": "={{ $json.body.text }}"
+      },
+      "id": "2bc8f4eb-7e3e-4623-8c4d-df72023a88a8",
+      "name": "Instagram for Business",
+      "type": "n8n-nodes-base.instagramBusiness",
+      "typeVersion": 1,
+      "position": [
+        640,
+        460
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook (From Next.js App)": {
+      "main": [
+        [
+          {
+            "node": "Google Drive (Get Media)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive (Get Media)": {
+      "main": [
+        [
+          {
+            "node": "Facebook Pages",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter / X",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Instagram for Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7ef33d3-0cb0-4ba3-ab0c-4c6e8fcb84b0",
+  "meta": {
+    "instanceId": "local"
+  },
+  "id": "ease-automation-social-v1",
+  "tags": []
+}

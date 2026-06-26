@@ -88,29 +88,21 @@ export default function Socials() {
             style={{ display: "flex", alignItems: "center", gap: "8px", opacity: (!text.trim() || isUploading) ? 0.5 : 1 }}
           >
             {isUploading ? <Loader2 size={16} className="animate-spin" /> : uploadStatus === 'success' ? <Check size={16} /> : <Share2 size={16} />} 
-            {isUploading ? 'Publishing...' : 'Publish to All Platforms'}
+            {isUploading ? 'Triggering...' : 'Trigger n8n Automation'}
           </button>
         </div>
 
         {uploadStatus && results && (
           <div style={{ padding: "16px", background: "var(--surface-2)", borderRadius: "8px", marginTop: "16px" }}>
             <h4 style={{ marginBottom: "12px", fontSize: "14px", color: uploadStatus === 'success' ? 'var(--green)' : 'red' }}>
-              {uploadStatus === 'success' ? 'Publishing Attempt Completed' : 'Failed to reach API'}
+              {uploadStatus === 'success' ? 'n8n Workflow Triggered Successfully!' : 'Failed to reach n8n Webhook'}
             </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "13px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--text-2)" }}>Twitter:</span>
-                <span style={{ color: results.twitter.status === 'success' ? 'var(--green)' : 'var(--text)' }}>{results.twitter.status}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--text-2)" }}>Instagram:</span>
-                <span style={{ color: results.instagram.status === 'success' ? 'var(--green)' : 'var(--text)' }}>{results.instagram.status}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--text-2)" }}>WhatsApp:</span>
-                <span style={{ color: results.whatsapp.status === 'success' ? 'var(--green)' : 'var(--text)' }}>{results.whatsapp.status}</span>
-              </div>
-            </div>
+            {uploadStatus === 'success' && (
+              <p style={{ fontSize: "13px", color: "var(--text-2)", lineHeight: "1.5" }}>
+                The prompt caption and parameters have been sent to your n8n webhook. 
+                n8n will now download the media from Google Drive and automatically post it to Instagram, Facebook, and Twitter.
+              </p>
+            )}
           </div>
         )}
 
