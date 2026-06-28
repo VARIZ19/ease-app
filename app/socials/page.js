@@ -12,6 +12,7 @@ export default function Socials() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [results, setResults] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleUpload = async () => {
     if (!text.trim()) return;
@@ -36,9 +37,11 @@ export default function Socials() {
         setResults(data.results);
       } else {
         setUploadStatus('error');
+        setErrorMessage(data.error || 'Unknown API Error (Possibly payload too large or missing Env Vars on Vercel)');
       }
     } catch (e) {
       setUploadStatus('error');
+      setErrorMessage(e.message);
     }
     setIsUploading(false);
   };
@@ -157,15 +160,22 @@ export default function Socials() {
           </button>
         </div>
 
-        {uploadStatus && results && (
+        {uploadStatus && (
           <div style={{ padding: "16px", background: "var(--surface-2)", borderRadius: "8px", marginTop: "16px" }}>
-            <h4 style={{ marginBottom: "12px", fontSize: "14px", color: uploadStatus === 'success' ? 'var(--green)' : 'red' }}>
+            <h4 style={{ marginBottom: "12px", fontSize: "14px", color: uploadStatus === 'success' ? 'var(--green)' : 'var(--red, red)' }}>
               {uploadStatus === 'success' ? 'n8n Workflow Triggered Successfully!' : 'Failed to reach n8n Webhook'}
             </h4>
             {uploadStatus === 'success' && (
               <p style={{ fontSize: "13px", color: "var(--text-2)", lineHeight: "1.5" }}>
                 The prompt caption and parameters have been sent to your n8n webhook. 
-                n8n will now download the media from Google Drive and automatically post it to Instagram, Facebook, and Twitter.
+                n8n will now process the data.
+              </p>
+            )}
+            {uploadStatus === 'error' && (
+              <p style={{ fontSize: "13px", color: "var(--red, red)", lineHeight: "1.5" }}>
+                Error details: {errorMessage}
+                <br /><br />
+                <b>Tip:</b> If you are on Vercel, make sure you added <code>N8N_WEBHOOK_URL</code> and <code>ADMIN_TOKEN</code> in your Vercel project environment variables! Also, very large photos might be rejected by Vercel payload limits (use a compressed image under 3MB).
               </p>
             )}
           </div>
