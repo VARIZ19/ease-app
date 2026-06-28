@@ -19,6 +19,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata = {
   title: "Admin Dashboard — Ease Automation",
   description: "Admin app for managing Ease Automation leads and prompts.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Ease"
+  }
 };
 
 import AdminLayout from "../components/AdminLayout";

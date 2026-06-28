@@ -29,7 +29,7 @@ export default function Socials() {
         const fileName = `${fileId}.${ext}`;
 
         // 1. Get signed upload URL
-        const signRes = await fetch('/api/upload-url', {
+        const signRes = await fetch('https://easeaiapp.vercel.app/api/upload-url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-admin-token': 'ease_admin_2025' },
           body: JSON.stringify({ fileName })
@@ -54,7 +54,7 @@ export default function Socials() {
         finalImageUrl = `https://mipoynuzgurcsannbvmf.supabase.co/storage/v1/object/public/social_media/${fileName}`;
       }
 
-      const res = await fetch('/api/post', {
+      const res = await fetch('https://easeaiapp.vercel.app/api/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
