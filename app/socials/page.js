@@ -5,7 +5,7 @@ import { Share2, Check, Loader2, Image as ImageIcon } from "lucide-react";
 
 export default function Socials() {
   const [text, setText] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [fileId, setFileId] = useState("");
   const [fileType, setFileType] = useState("image");
   const [title, setTitle] = useState("");
@@ -22,13 +22,42 @@ export default function Socials() {
     setResults(null);
     
     try {
+      let finalImageUrl = "";
+      
+      if (selectedFile) {
+        const ext = selectedFile.name.split('.').pop();
+        const fileName = `${fileId}.${ext}`;
+
+        // 1. Get signed upload URL
+        const signRes = await fetch('/api/upload-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-admin-token': 'ease_admin_2025' },
+          body: JSON.stringify({ fileName })
+        });
+        const signData = await signRes.json();
+        
+        if (!signRes.ok) throw new Error(signData.error || 'Failed to get upload URL');
+
+        // 2. Upload file directly to Supabase storage bypassing Vercel API limits
+        const uploadRes = await fetch(signData.signedUrl, {
+          method: 'PUT',
+          body: selectedFile,
+          headers: { 'Content-Type': selectedFile.type }
+        });
+
+        if (!uploadRes.ok) throw new Error('Failed to upload file to storage');
+
+        // 3. Construct public URL
+        finalImageUrl = `https://mipoynuzgurcsannbvmf.supabase.co/storage/v1/object/public/social_media/${fileName}`;
+      }
+
       const res = await fetch('/api/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-admin-token': 'ease_admin_2025'
         },
-        body: JSON.stringify({ text, imageUrl, fileId, fileType, title })
+        body: JSON.stringify({ text, imageUrl: finalImageUrl, fileId, fileType, title })
       });
       const data = await res.json();
       
@@ -129,14 +158,9 @@ export default function Socials() {
                 // Auto-generate a file ID
                 const generatedId = `img_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
                 setFileId(generatedId);
-                
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setImageUrl(reader.result);
-                };
-                reader.readAsDataURL(file);
+                setSelectedFile(file);
               } else {
-                setImageUrl("");
+                setSelectedFile(null);
               }
             }}
             style={{ 
@@ -145,7 +169,7 @@ export default function Socials() {
               color: "var(--text)", fontSize: "14px"
             }}
           />
-          <p style={{ fontSize: "12px", color: "var(--text-2)", marginTop: "8px" }}>Upload a photo and it will automatically be converted to a Data URL for the webhook.</p>
+          <p style={{ fontSize: "12px", color: "var(--text-2)", marginTop: "8px" }}>Upload a photo. It will securely upload to Supabase and pass the public URL to your webhook.</p>
         </div>
 
         <div style={{ marginTop: "16px", paddingTop: "24px", borderTop: "1px solid var(--border-2)", display: "flex", justifyContent: "flex-end" }}>
