@@ -18,7 +18,7 @@ export async function POST(request) {
     // Create a signed upload URL for the file in the "social_media" bucket
     const { data, error } = await supabase.storage
       .from('social_media')
-      .createSignedUploadUrl(fileName);
+      .createSignedUploadUrl(fileName, { upsert: true });
 
     if (error) {
       return NextResponse.json({ error: error.message, debugUrl: process.env.SUPABASE_URL || 'missing' }, { status: 500 });
