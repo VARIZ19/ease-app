@@ -147,18 +147,22 @@ export default function Socials() {
 
         <div>
           <label style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", fontSize: "14px", color: "var(--text)", fontWeight: "600" }}>
-            <ImageIcon size={16} /> Upload Photo
+            <ImageIcon size={16} /> Upload Media
           </label>
           <input 
             type="file"
-            accept="image/*"
+            accept="image/*,video/*"
             onChange={e => {
               const file = e.target.files[0];
               if (file) {
-                // Auto-generate a file ID
-                const generatedId = `img_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+                // Auto-generate a file ID based on type
+                const prefix = file.type.startsWith('video') ? 'vid' : 'img';
+                const generatedId = `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
                 setFileId(generatedId);
                 setSelectedFile(file);
+                // Also auto-select the file type dropdown
+                if (file.type.startsWith('video')) setFileType('video');
+                else if (file.type.startsWith('image')) setFileType('image');
               } else {
                 setSelectedFile(null);
               }
@@ -169,7 +173,7 @@ export default function Socials() {
               color: "var(--text)", fontSize: "14px"
             }}
           />
-          <p style={{ fontSize: "12px", color: "var(--text-2)", marginTop: "8px" }}>Upload a photo. It will securely upload to Supabase and pass the public URL to your webhook.</p>
+          <p style={{ fontSize: "12px", color: "var(--text-2)", marginTop: "8px" }}>Upload a photo or video. It will securely upload to Supabase and pass the public URL to your webhook.</p>
         </div>
 
         <div style={{ marginTop: "16px", paddingTop: "24px", borderTop: "1px solid var(--border-2)", display: "flex", justifyContent: "flex-end" }}>
