@@ -8,7 +8,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { text, imageUrl } = body;
+    const { text, imageUrl, fileId, fileType, title } = body;
 
     if (!text) {
       return NextResponse.json({ error: 'Text content is required' }, { status: 400 });
@@ -27,6 +27,9 @@ export async function POST(request) {
       body: JSON.stringify({
         text,
         imageUrl,
+        fileId,
+        fileType,
+        title,
         timestamp: new Date().toISOString()
       })
     });

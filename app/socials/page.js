@@ -6,6 +6,9 @@ import { Share2, Check, Loader2, Image as ImageIcon } from "lucide-react";
 export default function Socials() {
   const [text, setText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [fileId, setFileId] = useState("");
+  const [fileType, setFileType] = useState("image");
+  const [title, setTitle] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [results, setResults] = useState(null);
@@ -24,7 +27,7 @@ export default function Socials() {
           'Content-Type': 'application/json',
           'x-admin-token': 'ease_admin_2025'
         },
-        body: JSON.stringify({ text, imageUrl })
+        body: JSON.stringify({ text, imageUrl, fileId, fileType, title })
       });
       const data = await res.json();
       
@@ -62,22 +65,80 @@ export default function Socials() {
           />
         </div>
 
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+          <div>
+            <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", color: "var(--text)", fontWeight: "600" }}>Title</label>
+            <input 
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder="My Post"
+              style={{ 
+                width: "100%", padding: "12px 16px", borderRadius: "8px", 
+                background: "var(--bg)", border: "1px solid var(--border-2)", 
+                color: "var(--text)", fontSize: "14px"
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", color: "var(--text)", fontWeight: "600" }}>File ID</label>
+            <input 
+              type="text"
+              value={fileId}
+              onChange={e => setFileId(e.target.value)}
+              placeholder="your-file-id-here"
+              style={{ 
+                width: "100%", padding: "12px 16px", borderRadius: "8px", 
+                background: "var(--bg)", border: "1px solid var(--border-2)", 
+                color: "var(--text)", fontSize: "14px"
+              }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", color: "var(--text)", fontWeight: "600" }}>File Type</label>
+          <select
+            value={fileType}
+            onChange={e => setFileType(e.target.value)}
+            style={{ 
+              width: "100%", padding: "12px 16px", borderRadius: "8px", 
+              background: "var(--bg)", border: "1px solid var(--border-2)", 
+              color: "var(--text)", fontSize: "14px"
+            }}
+          >
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+          </select>
+        </div>
+
         <div>
           <label style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", fontSize: "14px", color: "var(--text)", fontWeight: "600" }}>
-            <ImageIcon size={16} /> Optional Media URL (Required for Instagram)
+            <ImageIcon size={16} /> Upload Photo
           </label>
           <input 
-            type="text"
-            value={imageUrl}
-            onChange={e => setImageUrl(e.target.value)}
-            placeholder="https://example.com/image.jpg"
+            type="file"
+            accept="image/*"
+            onChange={e => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setImageUrl(reader.result);
+                };
+                reader.readAsDataURL(file);
+              } else {
+                setImageUrl("");
+              }
+            }}
             style={{ 
               width: "100%", padding: "12px 16px", borderRadius: "8px", 
               background: "var(--bg)", border: "1px solid var(--border-2)", 
               color: "var(--text)", fontSize: "14px"
             }}
           />
-          <p style={{ fontSize: "12px", color: "var(--text-2)", marginTop: "8px" }}>Instagram graph API requires a valid public image URL to create a post. If left blank, a default placeholder will be used.</p>
+          <p style={{ fontSize: "12px", color: "var(--text-2)", marginTop: "8px" }}>Upload a photo and it will automatically be converted to a Data URL for the webhook.</p>
         </div>
 
         <div style={{ marginTop: "16px", paddingTop: "24px", borderTop: "1px solid var(--border-2)", display: "flex", justifyContent: "flex-end" }}>
@@ -88,7 +149,7 @@ export default function Socials() {
             style={{ display: "flex", alignItems: "center", gap: "8px", opacity: (!text.trim() || isUploading) ? 0.5 : 1 }}
           >
             {isUploading ? <Loader2 size={16} className="animate-spin" /> : uploadStatus === 'success' ? <Check size={16} /> : <Share2 size={16} />} 
-            {isUploading ? 'Triggering...' : 'Trigger n8n Automation'}
+            {isUploading ? 'Publishing...' : 'Publish'}
           </button>
         </div>
 
