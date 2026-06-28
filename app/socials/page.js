@@ -45,7 +45,10 @@ export default function Socials() {
           headers: { 'Content-Type': selectedFile.type }
         });
 
-        if (!uploadRes.ok) throw new Error('Failed to upload file to storage');
+        if (!uploadRes.ok) {
+          const errText = await uploadRes.text().catch(() => 'No text body');
+          throw new Error('Supabase Storage Error: ' + uploadRes.status + ' - ' + errText);
+        }
 
         // 3. Construct public URL
         finalImageUrl = `https://mipoynuzgurcsannbvmf.supabase.co/storage/v1/object/public/social_media/${fileName}`;

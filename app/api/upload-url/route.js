@@ -21,7 +21,7 @@ export async function POST(request) {
       .createSignedUploadUrl(fileName);
 
     if (error) {
-      throw error;
+      return NextResponse.json({ error: error.message, debugUrl: process.env.SUPABASE_URL || 'missing' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, signedUrl: data.signedUrl, path: data.path });
