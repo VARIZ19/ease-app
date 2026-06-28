@@ -15,7 +15,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Text content is required' }, { status: 400 });
     }
 
-    const webhookUrl = process.env.N8N_WEBHOOK_URL || 'https://variz19311.app.n8n.cloud/webhook-test/publish-social-media';
+    const webhookUrl = process.env.N8N_WEBHOOK_URL || 'https://variz19311.app.n8n.cloud/webhook/publish-social-media';
     
     if (!webhookUrl) {
       return NextResponse.json({ error: 'N8N_WEBHOOK_URL is not configured' }, { status: 500 });
