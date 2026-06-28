@@ -86,12 +86,12 @@ export default function Socials() {
             <input 
               type="text"
               value={fileId}
-              onChange={e => setFileId(e.target.value)}
-              placeholder="your-file-id-here"
+              readOnly
+              placeholder="Auto-generated on upload"
               style={{ 
                 width: "100%", padding: "12px 16px", borderRadius: "8px", 
-                background: "var(--bg)", border: "1px solid var(--border-2)", 
-                color: "var(--text)", fontSize: "14px"
+                background: "var(--surface-2)", border: "1px solid var(--border-2)", 
+                color: "var(--text-2)", fontSize: "14px", cursor: "not-allowed"
               }}
             />
           </div>
@@ -123,6 +123,10 @@ export default function Socials() {
             onChange={e => {
               const file = e.target.files[0];
               if (file) {
+                // Auto-generate a file ID
+                const generatedId = `img_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+                setFileId(generatedId);
+                
                 const reader = new FileReader();
                 reader.onloadend = () => {
                   setImageUrl(reader.result);
