@@ -70,49 +70,84 @@ export default function AdminLayout({ children }) {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <aside style={{ width: '260px', borderRight: '1px solid var(--border)', background: 'var(--bg-2)', padding: '24px', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ marginBottom: '40px' }}>
-          <Link href="/" className="display" style={{ fontSize: '24px', fontWeight: '700' }}>
-            ease<span style={{ color: 'var(--violet-500)' }}>∞</span>
-          </Link>
-          <div style={{ fontSize: '12px', color: 'var(--text-2)', marginTop: '4px' }}>Admin Portal</div>
-        </div>
+    <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        {/* Desktop Sidebar */}
+        <aside className="desktop-only" style={{ width: '260px', borderRight: '1px solid var(--border)', background: 'var(--bg-2)', padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ marginBottom: '40px' }}>
+            <Link href="/" className="display" style={{ fontSize: '24px', fontWeight: '700' }}>
+              ease<span style={{ color: 'var(--violet-500)' }}>∞</span>
+            </Link>
+            <div style={{ fontSize: '12px', color: 'var(--text-2)', marginTop: '4px' }}>Admin Portal</div>
+          </div>
 
-        <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.path;
-            return (
-              <Link key={item.path} href={item.path} style={{
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px',
-                borderRadius: '8px', color: isActive ? '#fff' : 'var(--text-2)',
-                background: isActive ? 'var(--purple-dim)' : 'transparent',
-                transition: 'all 0.2s', fontWeight: isActive ? '600' : '400'
-              }}>
-                <Icon size={18} color={isActive ? 'var(--violet-500)' : 'currentColor'} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+          <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.path;
+              return (
+                <Link key={item.path} href={item.path} style={{
+                  display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px',
+                  borderRadius: '8px', color: isActive ? '#fff' : 'var(--text-2)',
+                  background: isActive ? 'var(--purple-dim)' : 'transparent',
+                  transition: 'all 0.2s', fontWeight: isActive ? '600' : '400'
+                }}>
+                  <Icon size={18} color={isActive ? 'var(--violet-500)' : 'currentColor'} />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
 
-        <button onClick={handleLogout} style={{
-          display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px',
-          borderRadius: '8px', color: 'var(--text-2)', transition: 'all 0.2s'
-        }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--red)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-2)'}>
-          <LogOut size={18} />
-          Log out
-        </button>
-      </aside>
+          <button onClick={handleLogout} style={{
+            display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px',
+            borderRadius: '8px', color: 'var(--text-2)', transition: 'all 0.2s'
+          }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--red)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-2)'}>
+            <LogOut size={18} />
+            Log out
+          </button>
+        </aside>
 
-      {/* Main Content */}
-      <main style={{ flex: 1, overflowY: 'auto' }}>
-        <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
-          {children}
-        </div>
-      </main>
+        {/* Main Content */}
+        <main style={{ flex: 1, overflowY: 'auto', paddingTop: 'var(--safe-top)', paddingBottom: 'calc(var(--safe-bottom) + 80px)' }}>
+          {/* Mobile Header */}
+          <div className="mobile-only glass-panel" style={{ position: 'sticky', top: 0, zIndex: 10, padding: '16px', borderLeft: 'none', borderRight: 'none', borderTop: 'none', borderRadius: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 'calc(16px + var(--safe-top))' }}>
+            <div className="display" style={{ fontSize: '20px', fontWeight: '700' }}>
+              ease<span style={{ color: 'var(--violet-500)' }}>∞</span>
+            </div>
+            <button onClick={handleLogout} style={{ color: 'var(--text-2)' }}>
+              <LogOut size={20} />
+            </button>
+          </div>
+
+          <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+            {children}
+          </div>
+        </main>
+      </div>
+
+      {/* Mobile Bottom Tab Bar */}
+      <nav className="mobile-only glass-panel" style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
+        display: 'flex', justifyContent: 'space-around', alignItems: 'center',
+        padding: '12px 16px', paddingBottom: 'calc(12px + var(--safe-bottom))',
+        borderLeft: 'none', borderRight: 'none', borderBottom: 'none', borderRadius: 0
+      }}>
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = pathname === item.path;
+          return (
+            <Link key={item.path} href={item.path} style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+              color: isActive ? 'var(--violet-500)' : 'var(--text-3)',
+              transition: 'color 0.2s'
+            }}>
+              <Icon size={24} color={isActive ? 'var(--violet-500)' : 'currentColor'} />
+              <span style={{ fontSize: '10px', fontWeight: isActive ? '600' : '500' }}>{item.name.split(' ')[0]}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

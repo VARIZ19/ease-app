@@ -100,7 +100,7 @@ export default function Socials() {
           />
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+        <div className="flex-col-md-row">
           <div>
             <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", color: "var(--text)", fontWeight: "600" }}>Title</label>
             <input 
@@ -179,15 +179,15 @@ export default function Socials() {
           <p style={{ fontSize: "12px", color: "var(--text-2)", marginTop: "8px" }}>Upload a photo or video. It will securely upload to Supabase and pass the public URL to your webhook.</p>
         </div>
 
-        <div style={{ marginTop: "16px", paddingTop: "24px", borderTop: "1px solid var(--border-2)", display: "flex", justifyContent: "flex-end" }}>
+        <div style={{ marginTop: "16px", paddingTop: "24px", borderTop: "1px solid var(--border-2)", display: "flex", flexDirection: "column" }}>
           <button 
             className="btn-primary"
             onClick={handleUpload} 
             disabled={isUploading || !text.trim()}
-            style={{ display: "flex", alignItems: "center", gap: "8px", opacity: (!text.trim() || isUploading) ? 0.5 : 1 }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", opacity: (!text.trim() || isUploading) ? 0.5 : 1, width: "100%", padding: "16px" }}
           >
-            {isUploading ? <Loader2 size={16} className="animate-spin" /> : uploadStatus === 'success' ? <Check size={16} /> : <Share2 size={16} />} 
-            {isUploading ? 'Publishing...' : 'Publish'}
+            {isUploading ? <Loader2 size={20} className="animate-spin" /> : uploadStatus === 'success' ? <Check size={20} /> : <Share2 size={20} />} 
+            <span style={{ fontSize: "16px" }}>{isUploading ? 'Publishing...' : 'Publish to Socials'}</span>
           </button>
         </div>
 
